@@ -1,0 +1,18 @@
+transaction_rate
+
+{
+"user_trace_id" : "1044184c-9fd4-482e-9959-70e63ff60b1c",
+"prod_code": "CPC001",
+"cur_src_code": "BRL",
+"cur_dst_code": "USD",
+"dst_amount": 126.58
+}
+
+{
+  "user_trace_id": "e880191d-4831-41f8-b808-7831123fc557",
+  "prod_code": "DVC001",
+  "cur_src_code": "BRL",
+  "cur_dst_code": "USD",
+  "dst_amount": 100.0
+}
+
