@@ -9,17 +9,32 @@ import sys
 import os
 import datetime
 import random 
+from ast import literal_eval
 import os
 import sys
 import configparser
 import time
-import uuid
 from pprint import pprint
+import uuid
 
 __author__ = 'Muevy S.A.'
 
 # -- [ Settings Parser ] --------------------------------------------------------------------
 CONTEXT = os.getenv('MUEVY_API_CONTEXT', 'SANDBOX')
+
+
+# -- [Request Payload] -------------------------------------------------
+
+payload  = json.loads('''
+{
+"user_trace_id": 2023122900000070,
+"prod_code": "'BFC001'",
+"pan": "4779891262607152",
+"recipient_name": "Andre Costa",
+"recipient_zipcode": "94404"
+}
+''')
+
 
 try:
     config      = configparser.ConfigParser()
@@ -29,7 +44,7 @@ try:
     BASE_URL    = config[CONTEXT]['base_url']
     API_KEY     = config[CONTEXT]['api_key']
     TIMEOUT     = config[CONTEXT]['timeout']
-    URL         = BASE_URL + '/check'
+    URL         = BASE_URL + '/cardinquiry'
 
 except Exception as e:
     print (e)
@@ -37,27 +52,13 @@ except Exception as e:
 DEBUG = DEBUG.lower() in ['true', 'yes', 'y', '1', 'ok']
 
 
-# -- [ Header Prepare ] -----------------------------------------------------------------
+# -- [ Payload Prepare ] -----------------------------------------------------------------
 
 headers = { "Content-Type" : "application/json",
             'Accept'       : 'application/json',
-            'X-Api-Key'    : API_KEY,
+            'X-Api-Key'    : API_KEY
             }
 
-
-# Create a unique request number reference
-trace_id = str(uuid.uuid4())
-
-
-payload = json.loads('''
-{
-"user_trace_id" : "'''+ trace_id + '''"
-}
-''')
-
-# These two lines enable debugging at httplib level (requests->urllib3->http.client)
-# You will see the REQUEST, including HEADERS and DATA, and RESPONSE with HEADERS but without DATA.
-# The only thing missing will be the response.body which is not logged.
 try:
     import http.client as http_client
 except ImportError:
@@ -79,25 +80,31 @@ else:
 
 
 print ("####################################################################################")
-print ("######################## Muevy Check Method                  #######################")
+print ("######################## Muevy Transaction Rate Method       #######################")
 print ("####################################################################################\n")
 
 print("\n=== [Context Information] ==========================================================")
 print ("Context         : ", CONTEXT)
 print ("Base URL        : ", BASE_URL) 
+print ("API Key         : ", API_KEY)
 print ("Endpoint URL    : ", URL)
 
 print("\n=== [Payload Request] ==============================================================")
 
-print("Headers: ", json.dumps(payload, indent=2))
-print("Payload:",  json.dumps(headers, indent=2))
+show      = json.dumps(payload, indent=2)
+s_headers = json.dumps(headers, indent=2)
+
+print("Headers:", s_headers)
+print("Payload:", show)
 
 response         = None
 
 try:
     ini_time = time.time()
-    response = requests.get(URL,
-                          headers = headers,
+    response = requests.post(URL,
+                          #cert = (cert, key),
+                          headers=headers,
+                          json = payload,
                           timeout=int(TIMEOUT)
                         )
 
@@ -107,14 +114,18 @@ except Exception as e:
     print (e)
 
 
-print("\n=== [Muevy Response] ===============================================================")
-print("Status: ", response.status_code)
+print("\n=== Muevy Response ===============================================================")
 
-print("\nHeaders:")
-pprint(dict(response.headers))
+status           = response.status_code
+headers          = response.headers
+response         = response.json()
 
-print("\nResponse Payload:")
-pprint(response.json())
+print("Status: ", status)
 
-print("\nRuntime Ini: {} End: {} Total {}".format(ini_time, end_time, end_time - ini_time))
+print("--- Response Headers ----------------")
+pprint(dict(headers))
 
+print("--- Response Payload -----------")
+pprint(response)
+
+print("\nRuntime Ini: {} End: {} Total {} - Status: {}".format(ini_time, end_time, end_time - ini_time, status))

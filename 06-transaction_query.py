@@ -27,9 +27,11 @@ CONTEXT = os.getenv('MUEVY_API_CONTEXT', 'SANDBOX')
 # -- [Request Payload] -------------------------------------------------
 payload = json.loads('''
 {
-"user_trace_id" : "8cae7a23-0944-40b0-893b-aa611397ae45",
-"prod_code"     : "CPC001",
-"muevy_transaction_id": "d989956e-d8fc-4789-8e57-47fe89f45a3d"
+"user_trace_id": 2023122900000063,
+"prod_code": "'BFC001'",
+"dt_ini": "2023-12-29",
+"dt_end": "2023-12-29",
+"page": 1
 }
 ''')
 
@@ -44,7 +46,7 @@ try:
     BASE_URL    = config[CONTEXT]['base_url']
     API_KEY     = config[CONTEXT]['api_key']
     TIMEOUT     = config[CONTEXT]['timeout']
-    URL         = BASE_URL + '/transactioninquiry'
+    URL         = BASE_URL + '/transactionquery'
 
 except Exception as e:
     print (e)
@@ -80,7 +82,7 @@ else:
 
 
 print ("####################################################################################")
-print ("######################## Muevy Transaction Inquiry Method    #######################")
+print ("######################## Muevy Transaction Query Method      #######################")
 print ("####################################################################################\n")
 
 print("\n=== [Context Information] ==========================================================")

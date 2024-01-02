@@ -27,7 +27,7 @@ CONTEXT = os.getenv('MUEVY_API_CONTEXT', 'SANDBOX')
 
 payload  = json.loads('''
 {
-"user_trace_id" : "e880191d-4831-41f8-b808-7831123fc557",
+"user_trace_id" : "29d25492-f0a2-430f-bdd0-1544defcdeb5",
 "prod_code": "CPC001",
 "cur_src_code": "BRL",
 "cur_dst_code": "USD",

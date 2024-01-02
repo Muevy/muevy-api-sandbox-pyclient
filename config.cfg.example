@@ -1,6 +1,6 @@
 [MUEVY_SANDBOX]
 debug=False
-base_url=https://sandbox.muevy.com/<CONTEXT>/<VERSION>
+base_url=https://sandbox.muevy.com/muevy/<CONTEXT>/<VERSION>
 api_key=<API_KEY>
 timeout=35
 
